@@ -1,23 +1,22 @@
 package vudovenko.dev.users.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import vudovenko.dev.accounts.models.Account;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Модель пользователя
  */
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class User {
 
-    private String id;
+    private Long id;
     private String login;
-    private List<Account> accountList;
+    private Set<Account> accountList;
 }
