@@ -18,10 +18,14 @@ public class Account {
 
     private Long id;
     private Long userId;
-    private Long moneyAmount;
+    private Double moneyAmount;
 
-    public Long addMoney(Long amount) {
+    public Double addMoney(Double amount) {
         return moneyAmount += amount;
+    }
+
+    public Double takeAwayMoney(Double amount) {
+        return moneyAmount -= amount;
     }
 
     @Override

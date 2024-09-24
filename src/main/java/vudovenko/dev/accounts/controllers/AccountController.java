@@ -33,9 +33,17 @@ public class AccountController {
         }
     }
 
-    public void deposit(Long accountId, Long amount) {
+    public void deposit(Long accountId, Double amount) {
         try {
             accountService.deposit(accountId, amount);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void transfer(Long sourceAccountId, Long targetAccountId, Double amount) {
+        try {
+            accountService.transfer(sourceAccountId, targetAccountId, amount);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }

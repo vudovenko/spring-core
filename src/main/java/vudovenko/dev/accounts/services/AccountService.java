@@ -6,18 +6,17 @@ import vudovenko.dev.accounts.models.Account;
 import vudovenko.dev.users.models.User;
 import vudovenko.dev.users.services.UserService;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AccountService {
 
     private static Long idCounter = 1L;
 
-    @Value("${account.moneyAmount}") // Получаем значение из application.properties
-    private Long defaultMoneyAmount;
+    @Value("${account.default-amount}") // Получаем значение из application.properties
+    private Double defaultMoneyAmount;
+    @Value("${account.transfer-commission}")
+    private Double transferCommission;
 
     private final UserService userService;
 
@@ -38,7 +37,7 @@ public class AccountService {
         accounts.add(account);
         user.getAccountList().add(account);
 
-        System.out.printf("New account created with ID: %d for user: %s",
+        System.out.printf("\nNew account created with ID: %d for user: %s",
                 account.getId(),
                 user.getLogin());
 
@@ -79,12 +78,12 @@ public class AccountService {
         }
     }
 
-    public void deposit(Long accountId, Long amount) {
+    public void deposit(Long accountId, Double amount) {
         checkAmount(amount);
         Account account = findById(accountId);
         account.addMoney(amount);
 
-        System.out.printf("Amount %d deposited to account ID: %d",
+        System.out.printf("\nAmount %.1f deposited to account ID: %d",
                 amount,
                 accountId);
     }
@@ -96,9 +95,29 @@ public class AccountService {
                 .orElseThrow(() -> new IllegalArgumentException("Account with ID " + accountId + " not found"));
     }
 
-    private static void checkAmount(Long amount) {
+    private static void checkAmount(Double amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
+    }
+
+    public void transfer(Long sourceAccountId, Long targetAccountId, Double amount) {
+        checkAmount(amount);
+        Account sourceAccount = findById(sourceAccountId);
+        Account targetAccount = findById(targetAccountId);
+        if (sourceAccount.getMoneyAmount() < amount) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+        sourceAccount.takeAwayMoney(amount);
+        if (!Objects.equals(sourceAccount.getUserId(), targetAccount.getUserId())) {
+            amount = (1.0 - transferCommission) * amount;
+            targetAccount.addMoney(amount);
+        } else {
+            targetAccount.addMoney(amount);
+        }
+        System.out.printf("\nAmount %.1f transferred from account ID %d to account ID %d",
+                amount,
+                sourceAccountId,
+                targetAccountId);
     }
 }
