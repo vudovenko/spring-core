@@ -38,6 +38,11 @@ public class OperationsConsoleListener implements Runnable {
                     Long userId = Long.valueOf(scanner.nextLine());
                     createAccount(userId);
                 }
+                case ACCOUNT_CLOSE -> {
+                    System.out.println("Enter account ID to close:");
+                    Long accountId = Long.valueOf(scanner.nextLine());
+                    closeAccount(accountId);
+                }
             }
         }
     }
@@ -62,7 +67,7 @@ public class OperationsConsoleListener implements Runnable {
             user = userService.createUser(login);
             accountService.createAccount(user);
             System.out.println("User created: " + user);
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -77,6 +82,14 @@ public class OperationsConsoleListener implements Runnable {
             accountService.createAccount(userOptional.get());
         } else {
             System.out.println(STR."User with id \{userId} not found");
+        }
+    }
+
+    private void closeAccount(Long accountId) {
+        try {
+            accountService.closeAccount(accountId);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

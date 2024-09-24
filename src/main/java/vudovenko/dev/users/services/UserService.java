@@ -3,6 +3,7 @@ package vudovenko.dev.users.services;
 import org.springframework.stereotype.Service;
 import vudovenko.dev.users.models.User;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +24,7 @@ public class UserService {
                 .builder()
                 .id(idCounter++)
                 .login(login)
-                .accountList(new HashSet<>())
+                .accountList(new ArrayList<>())
                 .build();
 
         users.add(user);
