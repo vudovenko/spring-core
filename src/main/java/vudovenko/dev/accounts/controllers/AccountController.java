@@ -48,4 +48,12 @@ public class AccountController {
             System.out.println(e.getMessage());
         }
     }
+
+    public void withdraw(Long accountId, Double amount) {
+        try {
+            accountService.withdraw(accountId, amount);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

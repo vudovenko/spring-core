@@ -58,6 +58,13 @@ public class OperationsConsoleListener implements Runnable {
                     Double amount = Double.valueOf(scanner.nextLine());
                     accountController.transfer(sourceAccountId, targetAccountId, amount);
                 }
+                case ACCOUNT_WITHDRAW -> {
+                    System.out.println("Enter account ID:");
+                    Long accountId = Long.valueOf(scanner.nextLine());
+                    System.out.println("Enter amount to withdraw:");
+                    Double amount = Double.valueOf(scanner.nextLine());
+                    accountController.withdraw(accountId, amount);
+                }
             }
         }
     }

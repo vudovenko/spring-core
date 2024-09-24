@@ -62,9 +62,9 @@ public class AccountService {
                 } else {
                     Account firstAccount = userAccounts.getFirst();
                     if (firstAccount.equals(account)) {
-                        userAccounts.get(1).addMoney(account.getMoneyAmount());
+                        userAccounts.get(1).deposit(account.getMoneyAmount());
                     } else {
-                        firstAccount.addMoney(account.getMoneyAmount());
+                        firstAccount.deposit(account.getMoneyAmount());
                     }
 
                     accounts.remove(account);
@@ -81,7 +81,7 @@ public class AccountService {
     public void deposit(Long accountId, Double amount) {
         checkAmount(amount);
         Account account = findById(accountId);
-        account.addMoney(amount);
+        account.deposit(amount);
 
         System.out.printf("\nAmount %.1f deposited to account ID: %d",
                 amount,
@@ -95,12 +95,6 @@ public class AccountService {
                 .orElseThrow(() -> new IllegalArgumentException("Account with ID " + accountId + " not found"));
     }
 
-    private static void checkAmount(Double amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("Amount must be positive");
-        }
-    }
-
     public void transfer(Long sourceAccountId, Long targetAccountId, Double amount) {
         checkAmount(amount);
         Account sourceAccount = findById(sourceAccountId);
@@ -108,16 +102,32 @@ public class AccountService {
         if (sourceAccount.getMoneyAmount() < amount) {
             throw new IllegalArgumentException("Insufficient funds");
         }
-        sourceAccount.takeAwayMoney(amount);
+        sourceAccount.withdrawn(amount);
         if (!Objects.equals(sourceAccount.getUserId(), targetAccount.getUserId())) {
             amount = (1.0 - transferCommission) * amount;
-            targetAccount.addMoney(amount);
+            targetAccount.deposit(amount);
         } else {
-            targetAccount.addMoney(amount);
+            targetAccount.deposit(amount);
         }
         System.out.printf("\nAmount %.1f transferred from account ID %d to account ID %d",
                 amount,
                 sourceAccountId,
                 targetAccountId);
+    }
+
+    public void withdraw(Long accountId, Double amount) {
+        checkAmount(amount);
+        Account account = findById(accountId);
+        account.withdrawn(amount);
+
+        System.out.printf("\nAmount %.1f withdrawn from account ID: %d",
+                amount,
+                accountId);
+    }
+
+    private static void checkAmount(Double amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
     }
 }

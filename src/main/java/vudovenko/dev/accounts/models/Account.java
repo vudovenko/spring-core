@@ -20,11 +20,14 @@ public class Account {
     private Long userId;
     private Double moneyAmount;
 
-    public Double addMoney(Double amount) {
+    public Double deposit(Double amount) {
         return moneyAmount += amount;
     }
 
-    public Double takeAwayMoney(Double amount) {
+    public Double withdrawn(Double amount) {
+        if (amount > moneyAmount) {
+            throw new IllegalArgumentException("Not enough money");
+        }
         return moneyAmount -= amount;
     }
 
