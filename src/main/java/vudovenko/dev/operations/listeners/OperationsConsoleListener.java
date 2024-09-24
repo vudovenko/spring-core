@@ -73,13 +73,13 @@ public class OperationsConsoleListener implements Runnable {
         System.out.println("""
                                 
                 Please enter one of operation type:
-                -ACCOUNT_CREATE
                 -SHOW_ALL_USERS
-                -ACCOUNT_CLOSE
-                -ACCOUNT_WITHDRAW
-                -ACCOUNT_DEPOSIT
-                -ACCOUNT_TRANSFER
                 -USER_CREATE
+                -ACCOUNT_CREATE
+                -ACCOUNT_CLOSE
+                -ACCOUNT_DEPOSIT
+                -ACCOUNT_WITHDRAW
+                -ACCOUNT_TRANSFER
                 """);
     }
 

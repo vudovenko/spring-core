@@ -20,8 +20,7 @@ public class AccountController {
         if (userOptional.isPresent()) {
             accountService.createAccount(userOptional.get());
         } else {
-            // todo убрать все STR
-            System.out.println(STR."User with id \{userId} not found");
+            System.out.printf("User with id %d not found\n", userId);
         }
     }
 

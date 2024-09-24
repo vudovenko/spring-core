@@ -37,7 +37,7 @@ public class AccountService {
         accounts.add(account);
         user.getAccountList().add(account);
 
-        System.out.printf("\nNew account created with ID: %d for user: %s",
+        System.out.printf("New account created with ID: %d for user: %s\n",
                 account.getId(),
                 user.getLogin());
 
@@ -83,7 +83,7 @@ public class AccountService {
         Account account = findById(accountId);
         account.deposit(amount);
 
-        System.out.printf("\nAmount %.1f deposited to account ID: %d",
+        System.out.printf("Amount %.1f deposited to account ID: %d\n",
                 amount,
                 accountId);
     }
@@ -109,7 +109,7 @@ public class AccountService {
         } else {
             targetAccount.deposit(amount);
         }
-        System.out.printf("\nAmount %.1f transferred from account ID %d to account ID %d",
+        System.out.printf("Amount %.1f transferred from account ID %d to account ID %d\n",
                 amount,
                 sourceAccountId,
                 targetAccountId);
@@ -120,7 +120,7 @@ public class AccountService {
         Account account = findById(accountId);
         account.withdrawn(amount);
 
-        System.out.printf("\nAmount %.1f withdrawn from account ID: %d",
+        System.out.printf("Amount %.1f withdrawn from account ID: %d\n",
                 amount,
                 accountId);
     }
