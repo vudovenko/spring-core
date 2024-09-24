@@ -21,14 +21,27 @@ public class Account {
     private Double moneyAmount;
 
     public Double deposit(Double amount) {
+        checkAmount(amount);
         return moneyAmount += amount;
     }
 
     public Double withdrawn(Double amount) {
-        if (amount > moneyAmount) {
-            throw new IllegalArgumentException("Not enough money");
-        }
+        checkAmount(amount);
+        checkForSufficientFunds(this, amount);
         return moneyAmount -= amount;
+    }
+
+    private static void checkAmount(Double amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+    }
+
+    private static void checkForSufficientFunds(Account account, Double amount) {
+        if (account.getMoneyAmount() < amount) {
+            throw new IllegalArgumentException("Not enough money. On account with ID %d is only %.1f"
+                    .formatted(account.getId(), account.getMoneyAmount()));
+        }
     }
 
     @Override

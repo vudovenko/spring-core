@@ -13,7 +13,7 @@ public class AccountService {
 
     private static Long idCounter = 1L;
 
-    @Value("${account.default-amount}") // Получаем значение из application.properties
+    @Value("${account.default-amount}")
     private Double defaultMoneyAmount;
     @Value("${account.transfer-commission}")
     private Double transferCommission;
@@ -44,43 +44,33 @@ public class AccountService {
         return account;
     }
 
-    // todo отрефакторить
     public void closeAccount(Long accountId) {
-        Optional<Account> accountOptional = accounts
-                .stream()
-                .filter(account -> account.getId().equals(accountId))
-                .findFirst();
-        if (accountOptional.isPresent()) {
-            Account account = accountOptional.get();
-            Optional<User> userOptional = userService.getById(account.getUserId());
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                List<Account> userAccounts = user.getAccountList();
-                if (userAccounts.size() == 1) {
-                    System.out.println("It is impossible to close this account, " +
-                            "as it is the only one.");
-                } else {
-                    Account firstAccount = userAccounts.getFirst();
-                    if (firstAccount.equals(account)) {
-                        userAccounts.get(1).deposit(account.getMoneyAmount());
-                    } else {
-                        firstAccount.deposit(account.getMoneyAmount());
-                    }
+        Account account = getById(accountId);
+        User user = userService.getById(account.getUserId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("User with ID %d not found"
+                                .formatted(account.getUserId()))
+                );
 
-                    accounts.remove(account);
-                    user.getAccountList().remove(account);
-                }
-            } else {
-                throw new IllegalArgumentException("User with ID " + account.getUserId() + " not found");
-            }
+        List<Account> userAccounts = user.getAccountList();
+        if (userAccounts.size() == 1) {
+            System.out.println("It is impossible to close this account, " +
+                    "as it is the only one.");
         } else {
-            throw new IllegalArgumentException("Account with ID " + accountId + " not found");
+            Account firstAccount = userAccounts.getFirst();
+            if (firstAccount.equals(account)) {
+                userAccounts.get(1).deposit(account.getMoneyAmount());
+            } else {
+                firstAccount.deposit(account.getMoneyAmount());
+            }
+
+            accounts.remove(account);
+            user.getAccountList().remove(account);
         }
     }
 
     public void deposit(Long accountId, Double amount) {
-        checkAmount(amount);
-        Account account = findById(accountId);
+        Account account = getById(accountId);
         account.deposit(amount);
 
         System.out.printf("Amount %.1f deposited to account ID: %d\n",
@@ -88,20 +78,16 @@ public class AccountService {
                 accountId);
     }
 
-    public Account findById(Long accountId) {
+    public Account getById(Long accountId) {
         return accounts.stream()
                 .filter(account -> account.getId().equals(accountId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Account with ID " + accountId + " not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Account with ID %d not found".formatted(accountId)));
     }
 
     public void transfer(Long sourceAccountId, Long targetAccountId, Double amount) {
-        checkAmount(amount);
-        Account sourceAccount = findById(sourceAccountId);
-        Account targetAccount = findById(targetAccountId);
-        if (sourceAccount.getMoneyAmount() < amount) {
-            throw new IllegalArgumentException("Insufficient funds");
-        }
+        Account sourceAccount = getById(sourceAccountId);
+        Account targetAccount = getById(targetAccountId);
         sourceAccount.withdrawn(amount);
         if (!Objects.equals(sourceAccount.getUserId(), targetAccount.getUserId())) {
             amount = (1.0 - transferCommission) * amount;
@@ -116,18 +102,11 @@ public class AccountService {
     }
 
     public void withdraw(Long accountId, Double amount) {
-        checkAmount(amount);
-        Account account = findById(accountId);
+        Account account = getById(accountId);
         account.withdrawn(amount);
 
         System.out.printf("Amount %.1f withdrawn from account ID: %d\n",
                 amount,
                 accountId);
-    }
-
-    private static void checkAmount(Double amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("Amount must be positive");
-        }
     }
 }
