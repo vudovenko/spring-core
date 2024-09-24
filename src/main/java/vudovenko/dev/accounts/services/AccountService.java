@@ -78,4 +78,27 @@ public class AccountService {
             throw new IllegalArgumentException("Account with ID " + accountId + " not found");
         }
     }
+
+    public void deposit(Long accountId, Long amount) {
+        checkAmount(amount);
+        Account account = findById(accountId);
+        account.addMoney(amount);
+
+        System.out.printf("Amount %d deposited to account ID: %d",
+                amount,
+                accountId);
+    }
+
+    public Account findById(Long accountId) {
+        return accounts.stream()
+                .filter(account -> account.getId().equals(accountId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Account with ID " + accountId + " not found"));
+    }
+
+    private static void checkAmount(Long amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+    }
 }

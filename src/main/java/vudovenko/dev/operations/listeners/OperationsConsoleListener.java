@@ -2,46 +2,52 @@ package vudovenko.dev.operations.listeners;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vudovenko.dev.accounts.services.AccountService;
+import vudovenko.dev.accounts.controllers.AccountController;
 import vudovenko.dev.operations.enums.Operations;
-import vudovenko.dev.users.models.User;
-import vudovenko.dev.users.services.UserService;
+import vudovenko.dev.users.controllers.UsersController;
 
-import java.util.Optional;
 import java.util.Scanner;
 
 @Service("operationsConsoleListener")
 @RequiredArgsConstructor
 public class OperationsConsoleListener implements Runnable {
 
-    private final UserService userService;
-    private final AccountService accountService;
+    private final UsersController usersController;
+    private final AccountController accountController;
 
     @Override
     public void run() {
         Scanner scanner = new Scanner(System.in);
 
+        Operations operation;
         while (true) {
             showAllOperations();
-            String operation = scanner.nextLine();
-            Operations operations = Operations.valueOf(operation.toUpperCase());
+            operation = getOperation(scanner);
+            if (operation == null) continue;
 
-            switch (operations) {
+            switch (operation) {
                 case USER_CREATE -> {
                     System.out.println("Enter login for new user:");
                     String login = scanner.nextLine();
-                    createUser(login);
+                    usersController.createUser(login);
                 }
-                case SHOW_ALL_USERS -> showAllUsers();
+                case SHOW_ALL_USERS -> usersController.showAllUsers();
                 case ACCOUNT_CREATE -> {
                     System.out.println("Enter the user id for which to create an account:");
                     Long userId = Long.valueOf(scanner.nextLine());
-                    createAccount(userId);
+                    accountController.createAccount(userId);
                 }
                 case ACCOUNT_CLOSE -> {
                     System.out.println("Enter account ID to close:");
                     Long accountId = Long.valueOf(scanner.nextLine());
-                    closeAccount(accountId);
+                    accountController.closeAccount(accountId);
+                }
+                case ACCOUNT_DEPOSIT -> {
+                    System.out.println("Enter account ID:");
+                    Long accountId = Long.valueOf(scanner.nextLine());
+                    System.out.println("Enter amount to deposit:");
+                    Long amount = Long.valueOf(scanner.nextLine());
+                    accountController.deposit(accountId, amount);
                 }
             }
         }
@@ -61,35 +67,15 @@ public class OperationsConsoleListener implements Runnable {
                 """);
     }
 
-    private void createUser(String login) {
-        User user;
+    private Operations getOperation(Scanner scanner) {
+        Operations operation;
+        String consoleOperation = scanner.nextLine();
         try {
-            user = userService.createUser(login);
-            accountService.createAccount(user);
-            System.out.println("User created: " + user);
+            operation = Operations.valueOf(consoleOperation.toUpperCase());
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Wrong operation type");
+            return null;
         }
-    }
-
-    private void showAllUsers() {
-        userService.showAllUsers();
-    }
-
-    private void createAccount(Long userId) {
-        Optional<User> userOptional = userService.getById(userId);
-        if (userOptional.isPresent()) {
-            accountService.createAccount(userOptional.get());
-        } else {
-            System.out.println(STR."User with id \{userId} not found");
-        }
-    }
-
-    private void closeAccount(Long accountId) {
-        try {
-            accountService.closeAccount(accountId);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        return operation;
     }
 }
