@@ -74,7 +74,7 @@ public class AccountService {
         Account account = getById(accountId);
         account.deposit(amount);
 
-        System.out.printf("Amount %.1f deposited to account ID: %d\n",
+        System.out.printf("Amount %.2f deposited to account ID: %d\n",
                 amount,
                 accountId);
     }
@@ -96,7 +96,7 @@ public class AccountService {
         } else {
             targetAccount.deposit(amount);
         }
-        System.out.printf("Amount %.1f transferred from account ID %d to account ID %d\n",
+        System.out.printf("Amount %.2f transferred from account ID %d to account ID %d\n",
                 amount,
                 sourceAccountId,
                 targetAccountId);
@@ -106,7 +106,7 @@ public class AccountService {
         Account account = getById(accountId);
         account.withdrawn(amount);
 
-        System.out.printf("Amount %.1f withdrawn from account ID: %d\n",
+        System.out.printf("Amount %.2f withdrawn from account ID: %d\n",
                 amount,
                 accountId);
     }

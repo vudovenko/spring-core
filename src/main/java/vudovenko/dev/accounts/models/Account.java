@@ -22,13 +22,25 @@ public class Account {
 
     public Double deposit(Double amount) {
         checkAmount(amount);
-        return moneyAmount += amount;
+        moneyAmount = round(moneyAmount + amount, 2);
+
+        return moneyAmount;
     }
 
     public Double withdrawn(Double amount) {
         checkAmount(amount);
         checkForSufficientFunds(this, amount);
-        return moneyAmount -= amount;
+        moneyAmount = round(moneyAmount - amount, 2);
+
+        return moneyAmount;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException("Число знаков после запятой не может быть отрицательным");
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
     private static void checkAmount(Double amount) {
@@ -39,7 +51,7 @@ public class Account {
 
     private static void checkForSufficientFunds(Account account, Double amount) {
         if (account.getMoneyAmount() < amount) {
-            throw new IllegalArgumentException("Not enough money. On account with ID %d is only %.1f"
+            throw new IllegalArgumentException("Not enough money. On account with ID %d is only %.2f"
                     .formatted(account.getId(), account.getMoneyAmount()));
         }
     }
