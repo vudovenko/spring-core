@@ -13,17 +13,18 @@ public class AccountService {
 
     private static Long idCounter = 1L;
 
-    @Value("${account.default-amount}")
-    private Double defaultMoneyAmount;
-    @Value("${account.transfer-commission}")
-    private Double transferCommission;
-
     private final UserService userService;
+    private final Double defaultMoneyAmount;
+    private final Double transferCommission;
 
     private final Set<Account> accounts = new HashSet<>();
 
-    public AccountService(UserService userService) {
+    public AccountService(UserService userService,
+                          @Value("${account.default-amount}") Double defaultMoneyAmount,
+                          @Value("${account.transfer-commission}") Double transferCommission) {
         this.userService = userService;
+        this.defaultMoneyAmount = defaultMoneyAmount;
+        this.transferCommission = transferCommission;
     }
 
     public Account createAccount(User user) {

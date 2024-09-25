@@ -1,6 +1,6 @@
 package vudovenko.dev.operations.enums;
 
-public enum Operations {
+public enum ConsoleOperationType {
 
     USER_CREATE,
     SHOW_ALL_USERS,

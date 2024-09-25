@@ -3,7 +3,7 @@ package vudovenko.dev.operations.listeners;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vudovenko.dev.accounts.controllers.AccountController;
-import vudovenko.dev.operations.enums.Operations;
+import vudovenko.dev.operations.enums.ConsoleOperationType;
 import vudovenko.dev.users.controllers.UsersController;
 
 import java.util.Scanner;
@@ -21,7 +21,7 @@ public class OperationsConsoleListener implements Runnable {
 
         while (true) {
             showAllOperations();
-            Operations operation = getOperation(scanner);
+            ConsoleOperationType operation = getOperation(scanner);
             if (operation == null) continue;
 
             switch (operation) {
@@ -117,11 +117,11 @@ public class OperationsConsoleListener implements Runnable {
                 """);
     }
 
-    private Operations getOperation(Scanner scanner) {
-        Operations operation;
+    private ConsoleOperationType getOperation(Scanner scanner) {
+        ConsoleOperationType operation;
         String consoleOperation = scanner.nextLine();
         try {
-            operation = Operations.valueOf(consoleOperation.toUpperCase());
+            operation = ConsoleOperationType.valueOf(consoleOperation.toUpperCase());
         } catch (IllegalArgumentException e) {
             System.out.println("Wrong operation type");
             return null;
