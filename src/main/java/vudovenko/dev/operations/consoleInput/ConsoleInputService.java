@@ -1,10 +1,17 @@
-package vudovenko.dev.operations.utils;
+package vudovenko.dev.operations.consoleInput;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Scanner;
 
-public class OperationReader {
+@Service
+@RequiredArgsConstructor
+public class ConsoleInputService {
 
-    public static Long readLong(String prompt, Scanner scanner) {
+    private final Scanner scanner;
+
+    public Long readLong(String prompt) {
         System.out.println(prompt);
         while (!scanner.hasNextLong()) {
             System.out.println("Invalid input. Please enter a valid number.");
@@ -16,7 +23,7 @@ public class OperationReader {
         return value;
     }
 
-    public static Double readDouble(String prompt, Scanner scanner) {
+    public Double readDouble(String prompt) {
         System.out.println(prompt);
         while (!scanner.hasNextDouble()) {
             System.out.println("Invalid input. Please enter a valid number.");
@@ -28,12 +35,12 @@ public class OperationReader {
         return value;
     }
 
-    public static String readString(String prompt, Scanner scanner) {
+    public String readString(String prompt) {
         String input = "";
         System.out.println(prompt);
-        while (input.isEmpty()) {
+        while (input.isBlank()) {
             input = scanner.nextLine();
-            if (input.isEmpty()) {
+            if (input.isBlank()) {
                 System.out.println("Строка не может быть пустой. Попробуйте еще раз.");
             }
         }

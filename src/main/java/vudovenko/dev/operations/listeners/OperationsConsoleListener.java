@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-@Service("operationsConsoleListener")
+@Service
 public class OperationsConsoleListener implements Runnable {
 
-    public static final Scanner scanner = new Scanner(System.in);
-
+    public final Scanner scanner;
     private final Map<ConsoleOperationType, OperationCommand> commandMap;
 
-    public OperationsConsoleListener(List<OperationCommand> commands) {
+    public OperationsConsoleListener(Scanner scanner, List<OperationCommand> commands) {
+        this.scanner = scanner;
         commandMap = new HashMap<>();
         commands.forEach(command -> commandMap.put(command.getOperationType(), command));
     }
