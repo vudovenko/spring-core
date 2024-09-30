@@ -2,9 +2,9 @@ package vudovenko.dev.operations.operationHandlers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import vudovenko.dev.accounts.controllers.AccountController;
-import vudovenko.dev.operations.enums.ConsoleOperationType;
+import vudovenko.dev.accounts.services.AccountService;
 import vudovenko.dev.operations.consoleInput.ConsoleInputService;
+import vudovenko.dev.operations.enums.ConsoleOperationType;
 
 @Component
 @RequiredArgsConstructor
@@ -12,7 +12,7 @@ public class TransferAccountCommand implements OperationCommand {
 
     private static final ConsoleOperationType operationType = ConsoleOperationType.ACCOUNT_TRANSFER;
 
-    private final AccountController accountController;
+    private final AccountService accountService;
     private final ConsoleInputService consoleInputService;
 
     @Override
@@ -23,7 +23,7 @@ public class TransferAccountCommand implements OperationCommand {
                 .readLong("Enter target account ID:");
         Double amount = consoleInputService
                 .readDouble("Enter amount to transfer:");
-        accountController.transfer(sourceAccountId, targetAccountId, amount);
+        accountService.transfer(sourceAccountId, targetAccountId, amount);
     }
 
     @Override

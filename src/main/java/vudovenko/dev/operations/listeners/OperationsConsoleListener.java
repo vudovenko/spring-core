@@ -29,7 +29,11 @@ public class OperationsConsoleListener implements Runnable {
             ConsoleOperationType operation = getOperation();
             if (operation == null) continue;
 
-            commandMap.get(operation).execute();
+            try {
+                commandMap.get(operation).execute();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
