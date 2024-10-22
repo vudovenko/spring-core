@@ -1,10 +1,10 @@
-package vudovenko.dev.hw1.accounts.services;
+package vudovenko.dev.hw.accounts.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import vudovenko.dev.hw1.accounts.models.Account;
-import vudovenko.dev.hw1.users.models.User;
-import vudovenko.dev.hw1.users.services.UserService;
+import vudovenko.dev.hw.accounts.models.Account;
+import vudovenko.dev.hw.users.models.User;
+import vudovenko.dev.hw.users.services.UserService;
 
 import java.util.*;
 

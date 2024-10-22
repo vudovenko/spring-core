@@ -1,8 +1,8 @@
-package vudovenko.dev.hw1.operations.listeners;
+package vudovenko.dev.hw.operations.listeners;
 
 import org.springframework.stereotype.Service;
-import vudovenko.dev.hw1.operations.operationHandlers.OperationCommand;
-import vudovenko.dev.hw1.operations.enums.ConsoleOperationType;
+import vudovenko.dev.hw.operations.operationHandlers.OperationCommand;
+import vudovenko.dev.hw.operations.enums.ConsoleOperationType;
 
 import java.util.HashMap;
 import java.util.List;

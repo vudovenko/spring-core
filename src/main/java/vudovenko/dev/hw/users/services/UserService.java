@@ -1,7 +1,7 @@
-package vudovenko.dev.hw1.users.services;
+package vudovenko.dev.hw.users.services;
 
 import org.springframework.stereotype.Service;
-import vudovenko.dev.hw1.users.models.User;
+import vudovenko.dev.hw.users.models.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;

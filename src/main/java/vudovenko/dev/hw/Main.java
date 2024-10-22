@@ -1,7 +1,7 @@
-package vudovenko.dev.hw1;
+package vudovenko.dev.hw;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import vudovenko.dev.hw1.operations.listeners.OperationsConsoleListener;
+import vudovenko.dev.hw.operations.listeners.OperationsConsoleListener;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {

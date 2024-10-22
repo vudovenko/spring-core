@@ -1,4 +1,4 @@
-package vudovenko.dev.hw1.accounts.models;
+package vudovenko.dev.hw.accounts.models;
 
 
 import lombok.*;

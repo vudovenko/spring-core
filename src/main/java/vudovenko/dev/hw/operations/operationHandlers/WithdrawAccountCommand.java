@@ -1,10 +1,10 @@
-package vudovenko.dev.hw1.operations.operationHandlers;
+package vudovenko.dev.hw.operations.operationHandlers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import vudovenko.dev.hw1.accounts.services.AccountService;
-import vudovenko.dev.hw1.operations.consoleInput.ConsoleInputService;
-import vudovenko.dev.hw1.operations.enums.ConsoleOperationType;
+import vudovenko.dev.hw.accounts.services.AccountService;
+import vudovenko.dev.hw.operations.consoleInput.ConsoleInputService;
+import vudovenko.dev.hw.operations.enums.ConsoleOperationType;
 
 @Component
 @RequiredArgsConstructor

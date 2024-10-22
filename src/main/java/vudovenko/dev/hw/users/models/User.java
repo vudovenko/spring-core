@@ -1,7 +1,7 @@
-package vudovenko.dev.hw1.users.models;
+package vudovenko.dev.hw.users.models;
 
 import lombok.*;
-import vudovenko.dev.hw1.accounts.models.Account;
+import vudovenko.dev.hw.accounts.models.Account;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package vudovenko.dev.hw1.operations.consoleInput;
+package vudovenko.dev.hw.operations.consoleInput;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

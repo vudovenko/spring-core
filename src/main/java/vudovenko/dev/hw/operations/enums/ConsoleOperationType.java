@@ -1,4 +1,4 @@
-package vudovenko.dev.hw1.operations.enums;
+package vudovenko.dev.hw.operations.enums;
 
 public enum ConsoleOperationType {
 
