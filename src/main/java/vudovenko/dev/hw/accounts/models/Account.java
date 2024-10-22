@@ -4,6 +4,7 @@ package vudovenko.dev.hw.accounts.models;
 import jakarta.persistence.*;
 import lombok.*;
 import vudovenko.dev.hw.users.models.User;
+import vudovenko.dev.hw.utils.MathUtils;
 
 import java.util.Objects;
 
@@ -33,25 +34,31 @@ public class Account {
 
     public Double deposit(Double amount) {
         checkAmount(amount);
-        moneyAmount = round(moneyAmount + amount, 2);
+        moneyAmount = MathUtils.round(moneyAmount + amount, 2);
 
         return moneyAmount;
     }
 
-    public Double withdrawn(Double amount) {
+    public Double withdraw(Double amount) {
         checkAmount(amount);
         checkForSufficientFunds(this, amount);
-        moneyAmount = round(moneyAmount - amount, 2);
+        moneyAmount = MathUtils.round(moneyAmount - amount, 2);
 
         return moneyAmount;
     }
 
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException("Число знаков после запятой не может быть отрицательным");
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
+    public void transfer(
+            Account targetAccount,
+            Double amount,
+            Double transferCommission
+    ) {
+        this.withdraw(amount);
+        if (!Objects.equals(this.getUser(), targetAccount.getUser())) {
+            amount = (1.0 - transferCommission) * amount;
+            targetAccount.deposit(amount);
+        } else {
+            targetAccount.deposit(amount);
+        }
     }
 
     private static void checkAmount(Double amount) {
@@ -77,7 +84,7 @@ public class Account {
             return Objects.equals(id, account.id);
         }
 
-        return Objects.equals(userId, account.userId) &&
+        return Objects.equals(user, account.user) &&
                 Objects.equals(moneyAmount, account.moneyAmount);
     }
 
@@ -87,6 +94,6 @@ public class Account {
             return Objects.hash(id);
         }
 
-        return Objects.hash(userId, moneyAmount);
+        return Objects.hash(user, moneyAmount);
     }
 }

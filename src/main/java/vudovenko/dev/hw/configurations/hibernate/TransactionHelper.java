@@ -1,7 +1,6 @@
 package vudovenko.dev.hw.configurations.hibernate;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -46,6 +45,6 @@ public class TransactionHelper {
     @FunctionalInterface
     private interface SessionAction<T> {
 
-        T apply(Session session) throws HibernateException;
+        T apply(Session session);
     }
 }

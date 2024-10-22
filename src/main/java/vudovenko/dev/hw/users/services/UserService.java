@@ -1,19 +1,18 @@
 package vudovenko.dev.hw.users.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vudovenko.dev.hw.users.models.User;
+import vudovenko.dev.hw.users.repositories.UserRepository;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private static Long idCounter = 1L;
-
-    private final Set<User> users = new HashSet<>();
+    private final UserRepository userRepository;
 
     public User createUser(String login) {
         if (getByLogin(login).isPresent()) {
@@ -24,7 +23,7 @@ public class UserService {
                 .builder()
                 .id(idCounter++)
                 .login(login)
-                .accountList(new ArrayList<>())
+                .accounts(new ArrayList<>())
                 .build();
 
         users.add(user);
@@ -40,10 +39,7 @@ public class UserService {
     }
 
     public Optional<User> getById(Long id) {
-        return users
-                .stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst();
+        return userRepository.findById(id);
     }
 
     public void showAllUsers() {
