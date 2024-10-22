@@ -1,7 +1,9 @@
 package vudovenko.dev.hw.accounts.models;
 
 
+import jakarta.persistence.*;
 import lombok.*;
+import vudovenko.dev.hw.users.models.User;
 
 import java.util.Objects;
 
@@ -14,10 +16,19 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Entity
+@Table(name = "accounts")
 public class Account {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @Column(name = "money_amount")
     private Double moneyAmount;
 
     public Double deposit(Double amount) {

@@ -1,5 +1,6 @@
 package vudovenko.dev.hw.users.models;
 
+import jakarta.persistence.*;
 import lombok.*;
 import vudovenko.dev.hw.accounts.models.Account;
 
@@ -15,11 +16,20 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "login")
     private String login;
-    private List<Account> accountList;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    private List<Account> accounts;
 
     @Override
     public boolean equals(Object o) {
