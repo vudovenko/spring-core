@@ -1,4 +1,4 @@
-package vudovenko.dev.hw.configuration;
+package vudovenko.dev.hw.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
