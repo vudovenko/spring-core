@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import vudovenko.dev.hw.users.models.User;
 import vudovenko.dev.hw.users.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -21,21 +20,16 @@ public class UserService {
 
         User user = User
                 .builder()
-                .id(idCounter++)
                 .login(login)
-                .accounts(new ArrayList<>())
                 .build();
 
-        users.add(user);
+        userRepository.saveUser(user);
 
         return user;
     }
 
     public Optional<User> getByLogin(String login) {
-        return users
-                .stream()
-                .filter(user -> user.getLogin().equals(login))
-                .findFirst();
+        return userRepository.findByLogin(login);
     }
 
     public Optional<User> getById(Long id) {
@@ -44,6 +38,6 @@ public class UserService {
 
     public void showAllUsers() {
         System.out.println("List of all users:");
-        users.forEach(System.out::println);
+        userRepository.findAll().forEach(System.out::println);
     }
 }
