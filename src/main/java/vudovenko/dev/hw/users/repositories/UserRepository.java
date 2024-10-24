@@ -1,8 +1,9 @@
 package vudovenko.dev.hw.users.repositories;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import vudovenko.dev.hw.configurations.hibernate.TransactionHelper;
 import vudovenko.dev.hw.users.models.User;
 
 import java.util.List;
@@ -12,40 +13,36 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserRepository {
 
-    private final TransactionHelper transactionHelper;
+    private final SessionFactory sessionFactory;
+
+    private Session getCurrentSession() {
+        return sessionFactory.getCurrentSession();
+    }
 
     public User saveUser(User user) {
-        return transactionHelper.executeInTransaction(session -> {
-            session.persist(user);
+        getCurrentSession().persist(user);
 
-            return user;
-        });
+        return user;
     }
 
     public Optional<User> findById(Long id) {
-        return transactionHelper.executeInTransaction(session -> {
-            User user = session.get(User.class, id);
+        User user = getCurrentSession().get(User.class, id);
 
-            return Optional.ofNullable(user);
-        });
+        return Optional.ofNullable(user);
     }
 
     public Optional<User> findByLogin(String login) {
-        return transactionHelper.executeInTransaction(session -> {
-            User user = session
-                    .createQuery("select u from User u where u.login = :login", User.class)
-                    .setParameter("login", login)
-                    .getSingleResult();
+        List<User> user = getCurrentSession()
+                .createQuery("select u from User u where u.login = :login", User.class)
+                .setParameter("login", login)
+                .getResultList();
 
-            return Optional.ofNullable(user);
-        });
+        return user.isEmpty() ? Optional.empty() : Optional.of(user.getFirst());
     }
 
     public List<User> findAll() {
-        return transactionHelper.executeInTransaction(session -> {
-            return session
-                    .createQuery("select u from User u", User.class)
-                    .getResultList();
-        });
+        return getCurrentSession()
+                .createQuery("select u from User u", User.class)
+                .getResultList();
     }
 }
