@@ -5,7 +5,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import vudovenko.dev.hw.accounts.models.Account;
-import vudovenko.dev.hw.configurations.hibernate.TransactionHelper;
 
 import java.util.Optional;
 
@@ -14,7 +13,6 @@ import java.util.Optional;
 public class AccountRepository {
 
     private final SessionFactory sessionFactory;
-    private final TransactionHelper transactionHelper;
 
     private Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
@@ -49,16 +47,5 @@ public class AccountRepository {
         Account mergedAccount = getCurrentSession().merge(account);
 
         return mergedAccount.getMoneyAmount();
-    }
-
-    public void transfer(
-            Long sourceAccountId,
-            Long targetAccountId,
-            Double amount,
-            Double transferCommission
-    ) {
-        Account sourceAccount = getCurrentSession().get(Account.class, sourceAccountId);
-        Account targetAccount = getCurrentSession().get(Account.class, targetAccountId);
-        sourceAccount.transfer(targetAccount, amount, transferCommission);
     }
 }

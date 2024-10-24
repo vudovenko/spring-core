@@ -42,7 +42,12 @@ public class UserRepository {
 
     public List<User> findAll() {
         return getCurrentSession()
-                .createQuery("select u from User u", User.class)
+                .createQuery("""
+                            select distinct u
+                            from User u
+                            left join fetch u.accounts
+                            order by u.id
+                        """, User.class)
                 .getResultList();
     }
 }

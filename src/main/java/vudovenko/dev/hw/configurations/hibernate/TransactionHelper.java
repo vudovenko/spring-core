@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;
@@ -31,7 +30,7 @@ public class TransactionHelper {
         Session session = sessionFactory.getCurrentSession();
         Transaction transaction = session.getTransaction();
 
-        if (transaction.getStatus().equals(TransactionStatus.NOT_ACTIVE)) {
+        if (!transaction.isActive()) {
             try {
                 transaction.begin();
                 T result = supplier.get();

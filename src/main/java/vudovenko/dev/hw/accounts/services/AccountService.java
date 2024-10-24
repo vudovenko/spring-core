@@ -9,6 +9,7 @@ import vudovenko.dev.hw.users.models.User;
 import vudovenko.dev.hw.users.services.UserService;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AccountService {
@@ -79,12 +80,14 @@ public class AccountService {
     }
 
     public void deposit(Long accountId, Double amount) {
-        Account account = getById(accountId);
-        accountRepository.deposit(account, amount);
+        transactionHelper.executeInTransaction(() -> {
+            Account account = getById(accountId);
+            accountRepository.deposit(account, amount);
 
-        System.out.printf("Amount %.2f deposited to account ID: %d\n",
-                amount,
-                accountId);
+            System.out.printf("Amount %.2f deposited to account ID: %d\n",
+                    amount,
+                    accountId);
+        });
     }
 
     public Account getById(Long accountId) {
@@ -112,12 +115,18 @@ public class AccountService {
             Double amount
     ) {
         transactionHelper.executeInTransaction(() -> {
-            accountRepository.transfer(sourceAccountId, targetAccountId, amount, transferCommission);
+            Account sourceAccount = getById(sourceAccountId);
+            Account targetAccount = getById(targetAccountId);
 
-            System.out.printf("Amount %.2f transferred from account ID %d to account ID %d\n",
-                    amount,
-                    sourceAccountId,
-                    targetAccountId);
+            withdraw(sourceAccount.getId(), amount);
+            if (!Objects.equals(sourceAccount.getUser(), targetAccount.getUser())) {
+                Double amountWithCommission = (1.0 - transferCommission) * amount;
+                deposit(targetAccount.getId(), amountWithCommission);
+                System.out.printf("The commission was %.2f\n",
+                        amount - amountWithCommission);
+            } else {
+                deposit(targetAccount.getId(), amount);
+            }
         });
     }
 }
