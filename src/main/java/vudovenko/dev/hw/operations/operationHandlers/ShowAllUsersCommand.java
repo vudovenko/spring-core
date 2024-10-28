@@ -1,17 +1,19 @@
 package vudovenko.dev.hw.operations.operationHandlers;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import vudovenko.dev.hw.users.services.UserService;
 import vudovenko.dev.hw.operations.enums.ConsoleOperationType;
+import vudovenko.dev.hw.users.services.UserService;
 
 @Component
-@RequiredArgsConstructor
 public class ShowAllUsersCommand implements OperationCommand {
 
     private static final ConsoleOperationType operationType = ConsoleOperationType.SHOW_ALL_USERS;
 
     private final UserService userService;
+
+    public ShowAllUsersCommand(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public void execute() {

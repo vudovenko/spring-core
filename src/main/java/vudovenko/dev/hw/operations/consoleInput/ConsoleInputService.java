@@ -1,15 +1,17 @@
 package vudovenko.dev.hw.operations.consoleInput;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Scanner;
 
 @Service
-@RequiredArgsConstructor
 public class ConsoleInputService {
 
     private final Scanner scanner;
+
+    public ConsoleInputService(Scanner scanner) {
+        this.scanner = scanner;
+    }
 
     public Long readLong(String prompt) {
         System.out.println(prompt);

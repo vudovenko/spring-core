@@ -1,6 +1,5 @@
 package vudovenko.dev.hw.utils.transactions;
 
-import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -9,10 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.function.Supplier;
 
 @Component
-@RequiredArgsConstructor
 public class TransactionHelper {
 
     private final SessionFactory sessionFactory;
+
+    public TransactionHelper(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     public void executeInTransaction(Runnable runnable) {
         executeSessionActionInTransaction(() -> {

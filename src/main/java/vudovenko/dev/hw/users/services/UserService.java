@@ -1,19 +1,25 @@
 package vudovenko.dev.hw.users.services;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vudovenko.dev.hw.utils.transactions.TransactionHelper;
 import vudovenko.dev.hw.users.models.User;
 import vudovenko.dev.hw.users.repositories.UserRepository;
+import vudovenko.dev.hw.utils.transactions.TransactionHelper;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final TransactionHelper transactionHelper;
+
+    public UserService(
+            UserRepository userRepository,
+            TransactionHelper transactionHelper
+    ) {
+        this.userRepository = userRepository;
+        this.transactionHelper = transactionHelper;
+    }
 
     public User createUser(String login) {
         return transactionHelper.executeInTransaction(() -> {
