@@ -4,7 +4,6 @@ package vudovenko.dev.hw.accounts.models;
 import jakarta.persistence.*;
 import lombok.*;
 import vudovenko.dev.hw.users.models.User;
-import vudovenko.dev.hw.utils.math.MathUtils;
 
 import java.util.Objects;
 
@@ -32,48 +31,6 @@ public class Account {
 
     @Column(name = "money_amount")
     private Double moneyAmount;
-
-    public Double deposit(Double amount) {
-        checkAmount(amount);
-        moneyAmount = MathUtils.round(moneyAmount + amount, 2);
-
-        return moneyAmount;
-    }
-
-    public Double withdraw(Double amount) {
-        checkAmount(amount);
-        checkForSufficientFunds(this, amount);
-        moneyAmount = MathUtils.round(moneyAmount - amount, 2);
-
-        return moneyAmount;
-    }
-
-    public void transfer(
-            Account targetAccount,
-            Double amount,
-            Double transferCommission
-    ) {
-        this.withdraw(amount);
-        if (!Objects.equals(this.getUser(), targetAccount.getUser())) {
-            amount = (1.0 - transferCommission) * amount;
-            targetAccount.deposit(amount);
-        } else {
-            targetAccount.deposit(amount);
-        }
-    }
-
-    private static void checkAmount(Double amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("Amount must be positive");
-        }
-    }
-
-    private static void checkForSufficientFunds(Account account, Double amount) {
-        if (account.getMoneyAmount() < amount) {
-            throw new IllegalArgumentException("Not enough money. On account with ID %d is only %.2f"
-                    .formatted(account.getId(), account.getMoneyAmount()));
-        }
-    }
 
     @Override
     public boolean equals(Object o) {

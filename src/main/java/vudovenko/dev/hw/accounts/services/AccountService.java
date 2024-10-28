@@ -1,9 +1,12 @@
 package vudovenko.dev.hw.accounts.services;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import vudovenko.dev.hw.accounts.models.Account;
 import vudovenko.dev.hw.accounts.repositories.AccountRepository;
+import vudovenko.dev.hw.utils.math.MathUtils;
 import vudovenko.dev.hw.utils.transactions.TransactionHelper;
 import vudovenko.dev.hw.users.models.User;
 import vudovenko.dev.hw.users.services.UserService;
@@ -17,6 +20,7 @@ public class AccountService {
     private final UserService userService;
     private final AccountRepository accountRepository;
     private final TransactionHelper transactionHelper;
+    private final SessionFactory sessionFactory;
 
     private final Double defaultMoneyAmount;
     private final Double transferCommission;
@@ -25,14 +29,20 @@ public class AccountService {
             UserService userService,
             AccountRepository accountRepository,
             TransactionHelper transactionHelper,
+            SessionFactory sessionFactory,
             @Value("${account.default-amount}") Double defaultMoneyAmount,
             @Value("${account.transfer-commission}") Double transferCommission
     ) {
         this.userService = userService;
         this.accountRepository = accountRepository;
         this.transactionHelper = transactionHelper;
+        this.sessionFactory = sessionFactory;
         this.defaultMoneyAmount = defaultMoneyAmount;
         this.transferCommission = transferCommission;
+    }
+
+    private Session getCurrentSession() {
+        return sessionFactory.getCurrentSession();
     }
 
     public Account createAccount(User user) {
@@ -82,7 +92,10 @@ public class AccountService {
     public void deposit(Long accountId, Double amount) {
         transactionHelper.executeInTransaction(() -> {
             Account account = getById(accountId);
-            accountRepository.deposit(account, amount);
+            checkAmount(amount);
+            account.setMoneyAmount(MathUtils
+                    .round(account.getMoneyAmount() + amount, 2));
+            getCurrentSession().merge(account);
 
             System.out.printf("Amount %.2f deposited to account ID: %d\n",
                     amount,
@@ -101,7 +114,11 @@ public class AccountService {
     public void withdraw(Long accountId, Double amount) {
         transactionHelper.executeInTransaction(() -> {
             Account account = getById(accountId);
-            accountRepository.withdraw(account, amount);
+            checkAmount(amount);
+            checkForSufficientFunds(account, amount);
+            account.setMoneyAmount(MathUtils
+                    .round(account.getMoneyAmount() - amount, 2));
+            getCurrentSession().merge(account);
 
             System.out.printf("Amount %.2f withdrawn from account ID: %d\n",
                     amount,
@@ -128,5 +145,18 @@ public class AccountService {
                 deposit(targetAccount.getId(), amount);
             }
         });
+    }
+
+    private static void checkAmount(Double amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+    }
+
+    private static void checkForSufficientFunds(Account account, Double amount) {
+        if (account.getMoneyAmount() < amount) {
+            throw new IllegalArgumentException("Not enough money. On account with ID %d is only %.2f"
+                    .formatted(account.getId(), account.getMoneyAmount()));
+        }
     }
 }

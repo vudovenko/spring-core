@@ -34,18 +34,4 @@ public class AccountRepository {
         account = getCurrentSession().merge(account);
         getCurrentSession().remove(account);
     }
-
-    public Double deposit(Account account, Double amount) {
-        account.deposit(amount);
-        Account mergedAccount = getCurrentSession().merge(account);
-
-        return mergedAccount.getMoneyAmount();
-    }
-
-    public Double withdraw(Account account, Double amount) {
-        account.withdraw(amount);
-        Account mergedAccount = getCurrentSession().merge(account);
-
-        return mergedAccount.getMoneyAmount();
-    }
 }
