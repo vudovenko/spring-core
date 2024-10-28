@@ -2,7 +2,7 @@ package vudovenko.dev.hw.users.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vudovenko.dev.hw.configurations.hibernate.TransactionHelper;
+import vudovenko.dev.hw.utils.transactions.TransactionHelper;
 import vudovenko.dev.hw.users.models.User;
 import vudovenko.dev.hw.users.repositories.UserRepository;
 

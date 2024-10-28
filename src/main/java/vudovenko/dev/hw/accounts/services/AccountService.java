@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import vudovenko.dev.hw.accounts.models.Account;
 import vudovenko.dev.hw.accounts.repositories.AccountRepository;
-import vudovenko.dev.hw.configurations.hibernate.TransactionHelper;
+import vudovenko.dev.hw.utils.transactions.TransactionHelper;
 import vudovenko.dev.hw.users.models.User;
 import vudovenko.dev.hw.users.services.UserService;
 

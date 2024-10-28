@@ -1,4 +1,4 @@
-package vudovenko.dev.hw.utils;
+package vudovenko.dev.hw.utils.math;
 
 public class MathUtils {
 

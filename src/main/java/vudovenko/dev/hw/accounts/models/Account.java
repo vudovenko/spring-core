@@ -4,7 +4,7 @@ package vudovenko.dev.hw.accounts.models;
 import jakarta.persistence.*;
 import lombok.*;
 import vudovenko.dev.hw.users.models.User;
-import vudovenko.dev.hw.utils.MathUtils;
+import vudovenko.dev.hw.utils.math.MathUtils;
 
 import java.util.Objects;
 

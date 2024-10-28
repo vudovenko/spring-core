@@ -1,4 +1,4 @@
-package vudovenko.dev.hw.configurations.hibernate;
+package vudovenko.dev.hw.utils.transactions;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
