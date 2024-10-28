@@ -21,10 +21,8 @@ public class UserService {
                 throw new IllegalArgumentException("User already exists");
             }
 
-            User user = User
-                    .builder()
-                    .login(login)
-                    .build();
+            User user = new User();
+            user.setLogin(login);
 
             userRepository.saveUser(user);
 

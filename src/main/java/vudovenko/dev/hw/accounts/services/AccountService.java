@@ -47,11 +47,9 @@ public class AccountService {
 
     public Account createAccount(User user) {
         return transactionHelper.executeInTransaction(() -> {
-            Account account = Account
-                    .builder()
-                    .user(user)
-                    .moneyAmount(defaultMoneyAmount)
-                    .build();
+            Account account = new Account();
+            account.setUser(user);
+            account.setMoneyAmount(defaultMoneyAmount);
 
             account = accountRepository.save(account);
 

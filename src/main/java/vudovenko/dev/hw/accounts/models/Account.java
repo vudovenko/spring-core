@@ -2,20 +2,11 @@ package vudovenko.dev.hw.accounts.models;
 
 
 import jakarta.persistence.*;
-import lombok.*;
 import vudovenko.dev.hw.users.models.User;
-
-import java.util.Objects;
 
 /**
  * Модель счета пользователя
  */
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "accounts")
 public class Account {
@@ -24,7 +15,6 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -32,26 +22,44 @@ public class Account {
     @Column(name = "money_amount")
     private Double moneyAmount;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
+    public Account() {
+    }
 
-        if (id != null && account.id != null) {
-            return Objects.equals(id, account.id);
-        }
+    public Account(Long id, User user, Double moneyAmount) {
+        this.id = id;
+        this.user = user;
+        this.moneyAmount = moneyAmount;
+    }
 
-        return Objects.equals(user, account.user) &&
-                Objects.equals(moneyAmount, account.moneyAmount);
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Double getMoneyAmount() {
+        return moneyAmount;
+    }
+
+    public void setMoneyAmount(Double moneyAmount) {
+        this.moneyAmount = moneyAmount;
     }
 
     @Override
-    public int hashCode() {
-        if (id != null) {
-            return Objects.hash(id);
-        }
-
-        return Objects.hash(user, moneyAmount);
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", moneyAmount=" + moneyAmount +
+                '}';
     }
 }
