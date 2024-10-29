@@ -5,11 +5,10 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import vudovenko.dev.hw.accounts.models.Account;
-import vudovenko.dev.hw.accounts.repositories.AccountRepository;
-import vudovenko.dev.hw.utils.math.MathUtils;
-import vudovenko.dev.hw.utils.transactions.TransactionHelper;
 import vudovenko.dev.hw.users.models.User;
 import vudovenko.dev.hw.users.services.UserService;
+import vudovenko.dev.hw.utils.math.MathUtils;
+import vudovenko.dev.hw.utils.transactions.TransactionHelper;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +17,6 @@ import java.util.Objects;
 public class AccountService {
 
     private final UserService userService;
-    private final AccountRepository accountRepository;
     private final TransactionHelper transactionHelper;
     private final SessionFactory sessionFactory;
 
@@ -27,14 +25,12 @@ public class AccountService {
 
     public AccountService(
             UserService userService,
-            AccountRepository accountRepository,
             TransactionHelper transactionHelper,
             SessionFactory sessionFactory,
             @Value("${account.default-amount}") Double defaultMoneyAmount,
             @Value("${account.transfer-commission}") Double transferCommission
     ) {
         this.userService = userService;
-        this.accountRepository = accountRepository;
         this.transactionHelper = transactionHelper;
         this.sessionFactory = sessionFactory;
         this.defaultMoneyAmount = defaultMoneyAmount;
@@ -45,13 +41,13 @@ public class AccountService {
         return sessionFactory.getCurrentSession();
     }
 
-    public Account createAccount(User user) {
-        return transactionHelper.executeInTransaction(() -> {
+    public void createAccount(User user) {
+        transactionHelper.executeInTransaction(() -> {
             Account account = new Account();
             account.setUser(user);
             account.setMoneyAmount(defaultMoneyAmount);
 
-            account = accountRepository.save(account);
+            getCurrentSession().persist(account);
 
             System.out.printf("New account created with ID: %d for user: %s\n",
                     account.getId(),
@@ -70,21 +66,25 @@ public class AccountService {
                                     .formatted(account.getUser().getId()))
                     );
 
-            List<Account> userAccounts = user.getAccounts();
-            if (userAccounts.size() == 1) {
-                System.out.println("It is impossible to close this account, " +
-                        "as it is the only one.");
-            } else {
-                Account firstAccount = userAccounts.getFirst();
-                if (firstAccount.equals(account)) {
-                    deposit(userAccounts.get(1).getId(), account.getMoneyAmount());
-                } else {
-                    deposit(firstAccount.getId(), account.getMoneyAmount());
-                }
-
-                accountRepository.delete(account);
-            }
+            closeAccountAndTransferFunds(account, user);
         });
+    }
+
+    private void closeAccountAndTransferFunds(Account account, User user) {
+        List<Account> userAccounts = user.getAccounts();
+        if (userAccounts.size() == 1) {
+            System.out.println("It is impossible to close this account, " +
+                    "as it is the only one.");
+        } else {
+            Account firstAccount = userAccounts.getFirst();
+            if (firstAccount.equals(account)) {
+                deposit(userAccounts.get(1).getId(), account.getMoneyAmount());
+            } else {
+                deposit(firstAccount.getId(), account.getMoneyAmount());
+            }
+
+            getCurrentSession().remove(account);
+        }
     }
 
     public void deposit(Long accountId, Double amount) {
@@ -93,7 +93,6 @@ public class AccountService {
             checkAmount(amount);
             account.setMoneyAmount(MathUtils
                     .round(account.getMoneyAmount() + amount, 2));
-            getCurrentSession().merge(account);
 
             System.out.printf("Amount %.2f deposited to account ID: %d\n",
                     amount,
@@ -103,9 +102,14 @@ public class AccountService {
 
     public Account getById(Long accountId) {
         return transactionHelper.executeInTransaction(() -> {
-            return accountRepository.findById(accountId)
-                    .orElseThrow(() -> new IllegalArgumentException("Account with ID %d not found"
-                            .formatted(accountId)));
+            Account account = getCurrentSession().get(Account.class, accountId);
+
+            if (account != null) {
+                return account;
+            }
+
+            throw new IllegalArgumentException("Account with ID %d not found"
+                    .formatted(accountId));
         });
     }
 
@@ -116,7 +120,6 @@ public class AccountService {
             checkForSufficientFunds(account, amount);
             account.setMoneyAmount(MathUtils
                     .round(account.getMoneyAmount() - amount, 2));
-            getCurrentSession().merge(account);
 
             System.out.printf("Amount %.2f withdrawn from account ID: %d\n",
                     amount,
