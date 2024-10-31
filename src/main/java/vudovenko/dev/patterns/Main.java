@@ -1,6 +1,10 @@
 package vudovenko.dev.patterns;
 
 import vudovenko.dev.patterns.poll.models.Poll;
+import vudovenko.dev.patterns.pollQuestion.models.PollQuestionResponse;
+import vudovenko.dev.patterns.pollQuestion.responseGenerator.ResponseGenerator;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -34,5 +38,8 @@ public class Main {
                 .withAnswerVariant("Creativity")
                 .and()
                 .build();
+
+        ResponseGenerator responseGenerator = new ResponseGenerator();
+        List<PollQuestionResponse> responses = responseGenerator.generateResponses(poll);
     }
 }
