@@ -1,21 +1,15 @@
 package vudovenko.dev.patterns.pollQuestion.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.List;
 
 /**
- * Класс ответа на вопрос из опроса
+ * Ответ на вопрос опроса
+ *
+ * @param pollQuestion     вопрос
+ * @param selectedVariants выбранные варианты ответа
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class PollQuestionResponse {
-
-    private PollQuestion pollQuestion;
-    private List<String> selectedVariants;
+public record PollQuestionResponse(
+        PollQuestion pollQuestion,
+        List<String> selectedVariants
+) {
 }

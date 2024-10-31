@@ -1,22 +1,17 @@
 package vudovenko.dev.patterns.poll.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import vudovenko.dev.patterns.pollQuestion.models.PollQuestionResponse;
 
 import java.util.List;
 
 /**
- * Класс результата заполнения пользователями опроса
+ * Результат заполнения опроса пользователем
+ *
+ * @param userLogin логин пользователя
+ * @param pollQuestionResponseList список ответов пользователя
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class PollFillingData {
-
-    private String username;
-    private List<PollQuestionResponse> responses;
+public record PollFillingData(
+        String userLogin,
+        List<PollQuestionResponse> pollQuestionResponseList
+) {
 }
