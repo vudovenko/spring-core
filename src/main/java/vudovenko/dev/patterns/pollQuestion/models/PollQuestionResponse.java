@@ -1,4 +1,4 @@
-package vudovenko.dev.patterns.builder.pollQuestion.models;
+package vudovenko.dev.patterns.pollQuestion.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,10 +1,10 @@
-package vudovenko.dev.patterns.builder.poll.models;
+package vudovenko.dev.patterns.poll.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vudovenko.dev.patterns.builder.pollQuestion.models.PollQuestionResponse;
+import vudovenko.dev.patterns.pollQuestion.models.PollQuestionResponse;
 
 import java.util.List;
 
