@@ -1,6 +1,6 @@
-package vudovenko.dev.patterns.builder;
+package vudovenko.dev.patterns;
 
-import vudovenko.dev.patterns.builder.poll.models.Poll;
+import vudovenko.dev.patterns.poll.models.Poll;
 
 public class Main {
     public static void main(String[] args) {

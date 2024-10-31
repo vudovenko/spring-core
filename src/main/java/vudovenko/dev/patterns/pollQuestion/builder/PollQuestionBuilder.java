@@ -1,7 +1,7 @@
-package vudovenko.dev.patterns.builder.pollQuestion.builder;
+package vudovenko.dev.patterns.pollQuestion.builder;
 
-import vudovenko.dev.patterns.builder.poll.builder.PollBuilder;
-import vudovenko.dev.patterns.builder.pollQuestion.models.PollQuestion;
+import vudovenko.dev.patterns.poll.builder.PollBuilder;
+import vudovenko.dev.patterns.pollQuestion.models.PollQuestion;
 
 import java.util.ArrayList;
 import java.util.List;
