@@ -1,14 +1,24 @@
 package vudovenko.dev.patterns;
 
 import vudovenko.dev.patterns.poll.models.Poll;
-import vudovenko.dev.patterns.pollQuestion.models.PollQuestionResponse;
+import vudovenko.dev.patterns.poll.models.PollFillingData;
 import vudovenko.dev.patterns.pollQuestion.responseGenerator.ResponseGenerator;
+import vudovenko.dev.patterns.pollQuestion.statistic.analyzer.PollAnalyzer;
+import vudovenko.dev.patterns.strategy.impl.FullCountStrategy;
 
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Poll poll = Poll.builder()
+        Poll poll = getPoll();
+
+        List<PollFillingData> pollFillingDataList = getPollFillingDataList(poll, new ResponseGenerator());
+
+        new PollAnalyzer(new FullCountStrategy()).analyzePoll(pollFillingDataList);
+    }
+
+    private static Poll getPoll() {
+        return Poll.builder()
                 .withPollName("Programming Survey")
                 .yesNoPollQuestion("Are you programmer?")
 
@@ -38,8 +48,16 @@ public class Main {
                 .withAnswerVariant("Creativity")
                 .and()
                 .build();
+    }
 
-        ResponseGenerator responseGenerator = new ResponseGenerator();
-        List<PollQuestionResponse> responses = responseGenerator.generateResponses(poll);
+    private static List<PollFillingData> getPollFillingDataList(Poll poll, ResponseGenerator responseGenerator) {
+        return List.of(
+                new PollFillingData("user1", responseGenerator.generateResponses(poll)),
+                new PollFillingData("user2", responseGenerator.generateResponses(poll)),
+                new PollFillingData("user3", responseGenerator.generateResponses(poll)),
+                new PollFillingData("user4", responseGenerator.generateResponses(poll)),
+                new PollFillingData("user5", responseGenerator.generateResponses(poll)),
+                new PollFillingData("user6", responseGenerator.generateResponses(poll))
+        );
     }
 }
