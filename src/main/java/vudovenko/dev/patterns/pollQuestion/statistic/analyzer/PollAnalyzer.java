@@ -46,10 +46,10 @@ public class PollAnalyzer {
     }
 
     private List<PollQuestion> getQuestions(List<PollFillingData> pollFillingDataList) {
-        return pollFillingDataList
-                .getFirst()
-                .pollQuestionResponseList().stream()
+        return pollFillingDataList.stream()
+                .flatMap(pollFillingData -> pollFillingData.pollQuestionResponseList().stream())
                 .map(PollQuestionResponse::pollQuestion)
+                .distinct()
                 .toList();
     }
 
