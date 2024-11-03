@@ -1,36 +1,20 @@
 package vudovenko.dev.patterns.strategy.impl;
 
-import vudovenko.dev.patterns.pollQuestion.statistic.QuestionStatistics;
-import vudovenko.dev.patterns.strategy.AnalyzeStrategy;
+import vudovenko.dev.patterns.strategy.AbstractFrequencyAnswerStrategy;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Optional;
 
-public class MostFrequentAnswerStrategy implements AnalyzeStrategy {
+public class MostFrequentAnswerStrategy extends AbstractFrequencyAnswerStrategy {
+
 
     @Override
-    public void makeAnalyze(List<QuestionStatistics> questionStatisticsList) {
-        for (QuestionStatistics questionStatistics : questionStatisticsList) {
-            int max = Integer.MIN_VALUE;
-            List<String> popularAnswers = new ArrayList<>();
-            for (Map.Entry<String, Integer> entry
-                    : questionStatistics.getSelectedVariantsCount().entrySet()) {
-                String variant = entry.getKey();
-                int count = entry.getValue();
-                if (count > max) {
-                    max = count;
-                    popularAnswers.clear();
-                    popularAnswers.add(variant);
-                } else if (count == max) {
-                    popularAnswers.add(variant);
-                }
-            }
-            System.out.printf(
-                    "The most popular answers: %s for question: \"%s\"%n",
-                    popularAnswers,
-                    questionStatistics.getQuestionTitle()
-            );
-        }
+    protected Optional<Integer> findExtremeValue(Collection<Integer> values) {
+        return values.stream().max(Integer::compareTo);
+    }
+
+    @Override
+    protected String getMessage() {
+        return "The most popular answers: %s for question: \"%s\"%n";
     }
 }
