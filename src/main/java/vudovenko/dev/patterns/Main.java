@@ -4,7 +4,7 @@ import vudovenko.dev.patterns.poll.models.Poll;
 import vudovenko.dev.patterns.poll.models.PollFillingData;
 import vudovenko.dev.patterns.pollQuestion.responseGenerator.ResponseGenerator;
 import vudovenko.dev.patterns.pollQuestion.statistic.analyzer.PollAnalyzer;
-import vudovenko.dev.patterns.strategy.impl.LeastFrequentAnswerStrategy;
+import vudovenko.dev.patterns.strategy.impl.FullCountStrategy;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class Main {
 
         List<PollFillingData> pollFillingDataList = getPollFillingDataList(poll, new ResponseGenerator());
 
-        new PollAnalyzer(new LeastFrequentAnswerStrategy()).analyzePoll(pollFillingDataList);
+        new PollAnalyzer(new FullCountStrategy()).analyzePoll(pollFillingDataList);
     }
 
     private static Poll getPoll() {

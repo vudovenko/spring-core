@@ -9,9 +9,13 @@ public class FullCountStrategy implements AnalyzeStrategy {
 
     @Override
     public void makeAnalyze(List<QuestionStatistics> questionStatisticsList) {
-        questionStatisticsList
-                .stream()
-                .flatMap(questionStatistics -> questionStatistics.getSelectedVariantsCount().entrySet().stream())
-                .forEach(System.out::println);
+        questionStatisticsList.forEach(questionStatistics -> {
+            System.out.printf("Question: \"%s\"%n", questionStatistics.getQuestionTitle());
+
+            questionStatistics
+                    .getSelectedVariantsCount()
+                    .forEach((key, value) -> System.out.printf("%s: %d%n", key, value));
+            System.out.println();
+        });
     }
 }
