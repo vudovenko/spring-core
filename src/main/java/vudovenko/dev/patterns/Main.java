@@ -4,6 +4,8 @@ import vudovenko.dev.patterns.poll.models.Poll;
 import vudovenko.dev.patterns.poll.models.PollFillingData;
 import vudovenko.dev.patterns.pollQuestion.responseGenerator.ResponseGenerator;
 import vudovenko.dev.patterns.pollQuestion.statistic.analyzer.PollAnalyzer;
+import vudovenko.dev.patterns.pollQuestion.statistic.analyzer.impl.PollAnalyzerImpl;
+import vudovenko.dev.patterns.pollQuestion.statistic.analyzer.impl.proxy.PollAnalyzerProxy;
 import vudovenko.dev.patterns.strategy.impl.FullCountStrategy;
 
 import java.util.List;
@@ -14,7 +16,9 @@ public class Main {
 
         List<PollFillingData> pollFillingDataList = getPollFillingDataList(poll, new ResponseGenerator());
 
-        new PollAnalyzer(new FullCountStrategy()).analyzePoll(pollFillingDataList);
+        PollAnalyzer pollAnalyzer = new PollAnalyzerImpl(new FullCountStrategy());
+        PollAnalyzer pollAnalyzerProxy = new PollAnalyzerProxy(pollAnalyzer);
+        pollAnalyzerProxy.analyzePoll(pollFillingDataList);
     }
 
     private static Poll getPoll() {
